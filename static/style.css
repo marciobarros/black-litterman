@@ -1,0 +1,8 @@
+/* Painel de ativos */
+.container-ativos th.sortable { cursor: pointer; }
+.container-ativos th.sortable::after { content: " ⇅"; font-size: 0.8em; color: #888; }
+.container-ativos th.sortable.asc::after { content: " ↑"; }
+.container-ativos th.sortable.desc::after { content: " ↓"; }
+
+/* Painel de correlacoes */
+.container-correlacao input[type="number"] { width: 80px; text-align: center; }

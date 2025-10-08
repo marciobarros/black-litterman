@@ -3,9 +3,19 @@
 
 <head>
   <meta charset="UTF-8">
-  <title>Painel Principal</title>
+  <title>Black Litterman</title>
+  
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="static/style.css" rel="stylesheet">
+
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="servicos/servico-modelo.js"></script>
+  <script src="componentes/editor-ativos.js"></script>
+  <script src="componentes/editor-correlacao.js"></script>
+  <script src="componentes/editor-parametros.js"></script>
+  <script src="componentes/editor-exportacao.js"></script>
+  <script src="componentes/calculadora-modelo.js"></script>
+  
   <style>
     body { overflow: hidden; }
     .sidebar { width: 250px; height: 100vh; position: fixed; top: 0; left: 0; background-color: #343a40; color: white; display: flex; flex-direction: column; padding-top: 20px; }
@@ -23,6 +33,7 @@
     <a href="#" class="nav-link" data-page="ativos">📋 Ativos investíveis</a>
     <a href="#" class="nav-link" data-page="matriz">🔢 Matriz de correlação</a>
     <a href="#" class="nav-link" data-page="parametros">⚙️ Outros parâmetros</a>
+    <a href="#" class="nav-link" data-page="exportacao">📦 Importa / Exporta</a>
     <a href="#" class="nav-link" data-page="resultados">⚡ Resultados</a>
   </div>
 
@@ -49,25 +60,33 @@
           break;
 
         case "ativos":
-          $("#conteudo").html("<h4>Carregando os ativos ...</h4>");
-          $("#conteudo").load("codigo-editor-ativos.html");
+          var conteudo = pegaTemplateAtivos();
+          $("#conteudo").html(conteudo);
+          preparaPaginaAtivos();
           break;
 
         case "matriz":
-          $("#conteudo").html("<h4>Carregando matriz de correlação ...</h4>");
-          $("#conteudo").load("codigo-editor-correlacao.html");
+          var conteudo = pegaTemplateCorrelacao();
+          $("#conteudo").html(conteudo);
+          preparaPaginaCorrelacao();
           break;
 
         case "parametros":
-          $("#conteudo").html("<h4>Carregando editor de parâmetros ...</h4>");
-          $("#conteudo").load("codigo-editor-parametros.html");
+          var conteudo = pegaTemplateParametros();
+          $("#conteudo").html(conteudo);
+          preparaPaginaParametros();
+          break;
+
+        case "exportacao":
+          var conteudo = pegaTemplateExportacao();
+          $("#conteudo").html(conteudo);
+          preparaPaginaExportacao();
           break;
 
         case "resultados":
-          $("#conteudo").html(`
-            <h2>Resultados</h2>
-            <p>Aqui vão entrar os resultados calculados.</p>
-          `);
+          var conteudo = pegaTemplateCalculadora();
+          $("#conteudo").html(conteudo);
+          preparaPaginaCalculadora();
           break;
       }
     });
