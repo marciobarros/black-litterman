@@ -6,3 +6,8 @@
 
 /* Painel de correlacoes */
 .container-correlacao input[type="number"] { width: 80px; text-align: center; }
+
+/* Painel de calculadora */
+.text-right { text-align: right; }
+#premiosRiscoEquilibrioContainer { max-width: 300px; }
+#pesosEquilibrioContainer { max-width: 450px; }
