@@ -31,7 +31,7 @@ function pegaTemplateAtivos() {
               </div>
               <div class="col-md-2">
                 <label class="form-label">Opinião (%)</label>
-                <input type="number" class="form-control" id="opiniao" required min="-100" max="100" step="0.01">
+                <input type="number" class="form-control" id="opiniao" required min="-100" max="100" step="0.001">
               </div>
             </div>
             <div class="mt-3">
@@ -101,7 +101,7 @@ function apresentaTabelaAtivos() {
         <td>${el.nomeLongo}</td>
         <td>${parseFloat(el.volatilidade).toFixed(2)}</td>
         <td>${parseFloat(el.capitalizacao).toFixed(2)}</td>
-        <td>${parseFloat(el.opiniao).toFixed(2)}</td>
+        <td>${parseFloat(el.opiniao).toFixed(3)}</td>
         <td class="text-center">
           <button class="btn btn-sm btn-warning me-2" onclick="editaAtivo(${index})">Editar</button>
           <button class="btn btn-sm btn-danger" onclick="removeAtivo(${index})">Remover</button>

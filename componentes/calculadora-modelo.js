@@ -43,6 +43,95 @@ function multiplicaMatrizes(matrixA, matrixB) {
   return resultado;
 }
 
+// Multiplica uma matriz por um escalar
+function multiplicaMatrizEscalar(matrixA, escalar) {
+    // Pega as dimensões da matriz
+    const rowsA = matrixA.length;
+    const colsA = matrixA[0].length;
+
+    // Cria a matriz resultado
+    const resultado = Array(rowsA).fill(0).map(() => Array(colsA).fill(0));
+
+    // Realiza a multiplicação
+    for (let i = 0; i < rowsA; i++) {
+        for (let j = 0; j < colsA; j++) {
+            resultado[i][j] = matrixA[i][j] * escalar;
+        }
+    }
+
+    return resultado;
+}
+
+// Soma um escalar em uma matriz
+function somaMatrizEscalar(matrix, escalar) {
+    // Pega as dimensões da matriz
+    const rowsA = matrix.length;
+    const colsA = matrix[0].length;
+
+    // Cria a matriz resultado
+    const resultado = Array(rowsA).fill(0).map(() => Array(colsA).fill(0));
+
+    // Realiza a multiplicação
+    for (let i = 0; i < rowsA; i++) {
+        for (let j = 0; j < colsA; j++) {
+            resultado[i][j] = matrix[i][j] + escalar;
+        }
+    }
+
+    return resultado;
+}
+
+// Multiplica uma matriz por um vetor
+function multiplicaMatrizVetor(matrix, vector) {
+    // Pega as dimensões da matriz
+    const rows = matrix.length;
+    const cols = matrix[0].length;
+
+    // Pega a dimensão do vetor
+    const n = vector.length;
+
+    // Verifica se a matriz tem as dimensoes adequadas
+    if (!Array.isArray(matrix) || !Array.isArray(matrix[0]) || n !== cols) {
+        throw new Error("A matriz deve ter o mesmo numero de colunas do vetor.");
+    }
+
+    // Cria o vetor resultado
+    const resultado = Array(rows).fill(0);
+
+    // Realiza a multiplicação
+    for (let i = 0; i < rows; i++) {
+        for (let j = 0; j < cols; j++) {
+            resultado[i] += matrix[i][j] * vector[j];
+        }
+    }
+
+    return resultado;
+}
+
+// Multiplia dois vetores
+function multiplicaVetorVetor(vector1, vector2) {
+    // Pega as dimensões do primeiro vetor
+    const n1 = vector1.length;
+
+    // Pega a dimensão do segundo vetor
+    const n2 = vector2.length;
+
+    // Verifica se os vetores tem dimensoes adequadas
+    if (!Array.isArray(vector1) || !Array.isArray(vector2) || n1 !== n2) {
+        throw new Error("Os vetores devem ter a mesma dimensão.");
+    }
+
+    // Cria o vetor resultado
+    var resultado = 0.0;
+
+    // Realiza a multiplicação
+    for (let i = 0; i < n1; i++) {
+        resultado += vector1[i] * vector2[i];
+    }
+
+    return resultado;
+}
+
 // Soma a capitalização de mercado de uma lista de ativos
 function somaCapitalizacao(ativos) {
     var soma = 0;
@@ -203,6 +292,83 @@ function mostrarPesosEquilibrio(ativos, pesos) {
     $("#pesosEquilibrioContainer").html(html);
 }
 
+// Inverte uma matriz quadrada usando o método de Gauss-Jordan
+function inverteMatriz(matriz) {
+    const n = matriz.length;
+
+    // Verifica se a matriz é quadrada
+    if (!Array.isArray(matriz) || !Array.isArray(matriz[0]) || n !== matriz[0].length) {
+        throw new Error("A matriz deve ser quadrada.");
+    }
+
+    // Cria uma cópia da matriz
+    const A = matriz.map(linha => linha.slice());
+    
+    // Cria uma matriz identidade
+    const I = Array.from({ length: n }, (_, i) =>
+        Array.from({ length: n }, (_, j) => (i === j ? 1 : 0))
+    );
+
+    // Aplica o método de Gauss-Jordan
+    for (let i = 0; i < n; i++) {
+        // Encontra o pivô
+        let pivot = A[i][i];
+
+        if (pivot === 0) {
+            // tenta trocar de linha
+            let swapRow = -1;
+            
+            for (let k = i + 1; k < n; k++) {
+                if (A[k][i] !== 0) {
+                    swapRow = k;
+                    break;
+                }
+            }
+            
+            if (swapRow === -1) {
+                console.error("A matriz não é invertível.");
+                return null;
+            }
+
+            [A[i], A[swapRow]] = [A[swapRow], A[i]];
+            [I[i], I[swapRow]] = [I[swapRow], I[i]];
+            pivot = A[i][i];
+        }
+
+        // Normaliza a linha do pivô
+        for (let j = 0; j < n; j++) {
+            A[i][j] /= pivot;
+            I[i][j] /= pivot;
+        }
+
+        // Elimina os outros elementos da coluna
+        for (let k = 0; k < n; k++) {
+            if (k !== i) {
+                const fator = A[k][i];
+
+                for (let j = 0; j < n; j++) {
+                    A[k][j] -= fator * A[i][j];
+                    I[k][j] -= fator * I[i][j];
+                }
+            }
+        }
+    }
+
+    return I;
+}
+
+// Monta um vetor com as opiniões dos ativos
+function montaVetorOpiniao(ativos) {
+    var n = ativos.length;
+    var opiniao = Array(n).fill(0);
+
+    for (var i = 0; i < n; i++) {
+        opiniao[i] = ativos[i].opiniao;
+    }
+
+    return opiniao;
+}
+
 // Prepara a página da calculadora
 function preparaPaginaCalculadora() {
     var ativos = pegaAtivos();
@@ -239,19 +405,21 @@ function preparaPaginaCalculadora() {
     var pesosEquilibrio = calculaPesosEquilibrio(ativos, parametros, premiosRiscoEquilibrio)
     mostrarPesosEquilibrio(ativos, pesosEquilibrio)
 
+    var covariancias_invertidas = inverteMatriz(covariancias)
+
+    var covariancias_tau = multiplicaMatrizEscalar(covariancias, parametros.tau)
+
+    var invertida_covariancias_tau = inverteMatriz(covariancias_tau)
+
+    var vetor_opiniao = montaVetorOpiniao(ativos)
+
+    var pt_omega_p = multiplicaVetorVetor(vetor_opiniao, multiplicaMatrizVetor(covariancias_invertidas, vetor_opiniao))
+
+    var primeiro_termo = inverteMatriz(somaMatrizEscalar(invertida_covariancias_tau, pt_omega_p))
+
+
+
     // https://docs.google.com/spreadsheets/d/1VXgPbSDejq5cHB89FzrBny6dmwqNGO35XdRhSLmqAg8/edit?gid=0#gid=0
     
-    // TODO calcular omega
-
-    // TODO matriz de covariância invertida
-
-    // TODO matriz de covariância multiplicada por tau
-
-    // TODO inverte a matriz de covariância multiplicada por tau
-
-    // TODO calcula Ptranspose x omega x P = covariância-invertida-transposta vezes opiniao vezes covariância-invertida
-
-    // TODO soma inv (tau x covariância) + Ptranspose x omega x P
-
-    // TODO ...
+    // TODO continuar os calculos ...
 }
