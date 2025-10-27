@@ -1,0 +1,76 @@
+{
+  "ativos": [
+    {
+      "nomeCurto": "AUS",
+      "nomeLongo": "Austrália",
+      "volatilidade": "16",
+      "capitalizacao": "1.6",
+      "opiniao": "0"
+    },
+    {
+      "nomeCurto": "CAN",
+      "nomeLongo": "Canada",
+      "volatilidade": "20.3",
+      "capitalizacao": "2.20",
+      "opiniao": "0"
+    },
+    {
+      "nomeCurto": "FRA",
+      "nomeLongo": "Franca",
+      "volatilidade": "24.8",
+      "capitalizacao": "5.2",
+      "opiniao": "-0.295"
+    },
+    {
+      "nomeCurto": "GER",
+      "nomeLongo": "Alemanha",
+      "volatilidade": "27.1",
+      "capitalizacao": "5.5",
+      "opiniao": "1.000"
+    },
+    {
+      "nomeCurto": "JAP",
+      "nomeLongo": "Japao",
+      "volatilidade": "21.0",
+      "capitalizacao": "11.6",
+      "opiniao": "0"
+    },
+    {
+      "nomeCurto": "UK",
+      "nomeLongo": "United Kingdom",
+      "volatilidade": "20.0",
+      "capitalizacao": "12.4",
+      "opiniao": "-0.705"
+    },
+    {
+      "nomeCurto": "USA",
+      "nomeLongo": "USA",
+      "volatilidade": "18.7",
+      "capitalizacao": "61.5",
+      "opiniao": "0"
+    }
+  ],
+  "correlacao": {
+    "corr-aus-can": 0.488,
+    "corr-aus-fra": 0.478,
+    "corr-aus-ger": 0.515,
+    "corr-aus-jap": 0.439,
+    "corr-aus-uk": 0.512,
+    "corr-aus-usa": 0.491,
+    "corr-can-fra": 0.664,
+    "corr-can-ger": 0.655,
+    "corr-can-jap": 0.31,
+    "corr-can-uk": 0.608,
+    "corr-can-usa": 0.779,
+    "corr-fra-ger": 0.861,
+    "corr-fra-jap": 0.355,
+    "corr-fra-uk": 0.783,
+    "corr-fra-usa": 0.668,
+    "corr-ger-jap": 0.354,
+    "corr-ger-uk": 0.777,
+    "corr-ger-usa": 0.653,
+    "corr-jap-uk": 0.405,
+    "corr-jap-usa": 0.306,
+    "corr-uk-usa": 0.652
+  }
+}

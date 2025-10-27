@@ -3,38 +3,27 @@
 
 <head>
   <meta charset="UTF-8">
-  <title>Black Litterman</title>
+  <title>Modelo de Black & Litterman</title>
   
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
   <link href="static/style.css" rel="stylesheet">
 
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <script src="servicos/servico-modelo.js"></script>
-  <script src="componentes/editor-ativos.js"></script>
-  <script src="componentes/editor-correlacao.js"></script>
-  <script src="componentes/editor-parametros.js"></script>
-  <script src="componentes/editor-exportacao.js"></script>
-  <script src="componentes/calculadora-modelo.js"></script>
-  
-  <style>
-    body { overflow: hidden; }
-    .sidebar { width: 250px; height: 100vh; position: fixed; top: 0; left: 0; background-color: #343a40; color: white; display: flex; flex-direction: column; padding-top: 20px; }
-    .sidebar h4 { text-align: center; margin-bottom: 30px; }
-    .sidebar a { color: #ccc; padding: 12px 20px; text-decoration: none; display: block; border-left: 4px solid transparent; }
-    .sidebar a:hover, .sidebar a.active { background-color: #495057; color: white; border-left: 4px solid #0d6efd; }
-    .content { margin-left: 250px; padding: 30px; height: 100vh; overflow-y: auto; background-color: #f8f9fa; }
-  </style>
+  <script src="src/shared/matrix.js"></script>
+  <script src="src/servicos/servico-modelo.js"></script>
+  <script src="src/servicos/servico-black-litterman.js"></script>
+  <script src="src/componentes/componente-homepage.js"></script>
+  <script src="src/componentes/componente-editor-ativos.js"></script>
+  <script src="src/componentes/componente-editor-correlacao.js"></script>
+  <script src="src/componentes/componente-editor-parametros.js"></script>
+  <script src="src/componentes/componente-exportacao.js"></script>
+  <script src="src/componentes/componente-calculadora.js"></script>
+  <script src="src/roteador/roteador.js"></script>
 </head>
 
 <body>
   <div class="sidebar">
-    <h4>Modelo de Black & Litterman</h4>
-    <a href="#" class="nav-link active" data-page="home">🏠 Início</a>
-    <a href="#" class="nav-link" data-page="ativos">📋 Ativos investíveis</a>
-    <a href="#" class="nav-link" data-page="matriz">🔢 Matriz de correlação</a>
-    <a href="#" class="nav-link" data-page="parametros">⚙️ Outros parâmetros</a>
-    <a href="#" class="nav-link" data-page="exportacao">📦 Importa / Exporta</a>
-    <a href="#" class="nav-link" data-page="resultados">⚡ Resultados</a>
   </div>
 
   <div class="content">
@@ -43,59 +32,10 @@
   </div>
 
   <script>
-    // Quando o usuário clicar no menu
-    $(".nav-link").click(function(e) {
-      e.preventDefault();
-      $(".nav-link").removeClass("active");
-      $(this).addClass("active");
-
-      const page = $(this).data("page");
-
-      switch (page) {
-        case "home":
-          $("#conteudo").html(`
-            <h2>Bem-vindo!</h2>
-            <p>Esta página calcula o modelo de Black & Litterman de acordo com parâmetros selecionados.</p>
-            <p>Escolha uma das opções no menu lateral para começar.</p>`);
-          break;
-
-        case "ativos":
-          var conteudo = pegaTemplateAtivos();
-          $("#conteudo").html(conteudo);
-          preparaPaginaAtivos();
-          break;
-
-        case "matriz":
-          var conteudo = pegaTemplateCorrelacao();
-          $("#conteudo").html(conteudo);
-          preparaPaginaCorrelacao();
-          break;
-
-        case "parametros":
-          var conteudo = pegaTemplateParametros();
-          $("#conteudo").html(conteudo);
-          preparaPaginaParametros();
-          break;
-
-        case "exportacao":
-          var conteudo = pegaTemplateExportacao();
-          $("#conteudo").html(conteudo);
-          preparaPaginaExportacao();
-          break;
-
-        case "resultados":
-          var conteudo = pegaTemplateCalculadora();
-          $("#conteudo").html(conteudo);
-          preparaPaginaCalculadora();
-          break;
-      }
-    });
-
-    // Função inicial
     $(document).ready(function() {
-        $(".nav-link[data-page=home]").click()
+      roteador.criaNavegador($(".sidebar"), $("#conteudo"), "Modelo de Black & Litterman");
+      roteador.selecionaComponente("home")
     });
   </script>
-
 </body>
 </html>
