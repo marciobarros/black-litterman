@@ -49,7 +49,7 @@ var componenteExportacao = function() {
   function apresenta() {
     $("#exportacao").val(JSON.stringify(servicoModelo.pegaDados(), null, 2));
     $("#importar-modelo").click(importaModelo);
-    $("#url-data").val(window.location.href + "?data=" + btoa(JSON.stringify(servicoModelo.pegaDados())));
+    $("#url-data").val(generateUrlData(servicoModelo.pegaDados()));
   }
 
   return { template, apresenta }

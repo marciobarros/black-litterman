@@ -10,6 +10,7 @@
   <link href="static/style.css" rel="stylesheet">
 
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="src/shared/regio-framework.js"></script>
   <script src="src/shared/matrix.js"></script>
   <script src="src/servicos/servico-modelo.js"></script>
   <script src="src/servicos/servico-black-litterman.js"></script>
@@ -19,7 +20,6 @@
   <script src="src/componentes/componente-editor-parametros.js"></script>
   <script src="src/componentes/componente-exportacao.js"></script>
   <script src="src/componentes/componente-calculadora.js"></script>
-  <script src="src/roteador/roteador.js"></script>
 </head>
 
 <body>
@@ -32,24 +32,19 @@
   </div>
 
   <script>
+
     $(document).ready(function() {
-      roteador.criaNavegador($(".sidebar"), $("#conteudo"), "Modelo de Black & Litterman");
+      parseUrlData(servicoModelo.salvaDados);
+
+      var roteador = criaRoteador($(".sidebar"), $("#conteudo"), "Modelo de Black & Litterman")
+      roteador.adicionaComponente("home", "🏠 Início", componenteHomepage)
+      roteador.adicionaComponente("ativos", "📋 Ativos investíveis", componenteEditorAtivos)
+      roteador.adicionaComponente("correlacoes", "🔢 Matriz de correlação", componenteEditorCorrelacao)
+      roteador.adicionaComponente("parametros", "⚙️ Outros parâmetros", componenteEditorParametros)
+      roteador.adicionaComponente("exportacao", "📦 Importa / Exporta", componenteExportacao)
+      roteador.adicionaComponente("resultados", "⚡ Resultados", componenteCalculadora)
       roteador.selecionaComponente("home")
-
-      const queryString = window.location.search;
-      const urlParameters = new URLSearchParams(queryString);
-      const data = urlParameters.get('data');
-
-      if (data) {
-        try {
-          const jsonString = atob(data);
-          const dados = JSON.parse(jsonString);
-          servicoModelo.salvaDados(dados);
-        } catch (e) {
-          console.error("Erro ao decodificar os dados da URL:", e);
-        }
-      }
-    });
+    })
   </script>
 </body>
 </html>
