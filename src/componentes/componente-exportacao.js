@@ -25,6 +25,15 @@ var componenteExportacao = function() {
         </div>
       </div>
 
+      <div class="card shadow-sm mt-4">
+        <div class="card-body">
+          <div class="mb-3">
+            <label for="exportacao" class="form-label">URL Data</label>
+            <input class="form-control" id="url-data" readonly></input>
+          </div>
+        </div>
+      </div>
+
       <div id="mensagem-importacao" class="mt-3"></div>
     </div>`
 
@@ -40,6 +49,7 @@ var componenteExportacao = function() {
   function apresenta() {
     $("#exportacao").val(JSON.stringify(servicoModelo.pegaDados(), null, 2));
     $("#importar-modelo").click(importaModelo);
+    $("#url-data").val(window.location.href + "?data=" + btoa(JSON.stringify(servicoModelo.pegaDados())));
   }
 
   return { template, apresenta }

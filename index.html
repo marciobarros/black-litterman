@@ -35,6 +35,20 @@
     $(document).ready(function() {
       roteador.criaNavegador($(".sidebar"), $("#conteudo"), "Modelo de Black & Litterman");
       roteador.selecionaComponente("home")
+
+      const queryString = window.location.search;
+      const urlParameters = new URLSearchParams(queryString);
+      const data = urlParameters.get('data');
+
+      if (data) {
+        try {
+          const jsonString = atob(data);
+          const dados = JSON.parse(jsonString);
+          servicoModelo.salvaDados(dados);
+        } catch (e) {
+          console.error("Erro ao decodificar os dados da URL:", e);
+        }
+      }
     });
   </script>
 </body>
