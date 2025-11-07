@@ -136,7 +136,7 @@ var modeloBlackLitterman = function() {
       var matriz_opiniao = montaMatrizOpiniao(ativos)
       var matriz_opiniao_transposta = transpoeMatriz(matriz_opiniao)
 
-      var omega = multiplicaMatrizes(multiplicaMatrizes(matriz_opiniao, covariancias), matriz_opiniao_transposta) * parametros.tau * 2
+      var omega = multiplicaMatrizes(multiplicaMatrizes(matriz_opiniao, covariancias), matriz_opiniao_transposta) * parametros.tau
       var omega_invertido = 1.0 / omega
 
       var c0 = multiplicaMatrizes(multiplicaMatrizEscalar(matriz_opiniao_transposta, omega_invertido), matriz_opiniao)

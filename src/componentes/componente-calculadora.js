@@ -80,7 +80,7 @@ var componenteCalculadora = function() {
                         <th>Ativo</th>
                         <th class='text-right'>Pesos</th>
                         <th class='text-right'>Retornos</th>
-                        <th class='text-right'>Pesos Risco</th>
+                        <th class='text-right'>Alocação</th>
                     </tr>
                 </thead>
                 <tbody>`;
