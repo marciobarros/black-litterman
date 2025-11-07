@@ -56,8 +56,20 @@ var modeloBlackLitterman = function() {
       return covariancas;
   }
 
-  // Calcula a matriz de covariâncias a partir das correlações e volatilidades
-  function calculaPremiosRiscoEquilibrio(ativos, covariancias) {
+  // Calcula os pesos de equilíbrio a partir dos prêmios de risco de equilíbrio
+  function calculaPesosEquilibrio(ativos) {
+      var n = ativos.length
+      var pi = criaMatriz(n, 1)
+
+      for (var i = 0; i < n; i++) {
+          pi[i][0] = parseFloat(ativos[i].capitalizacao)
+      }
+
+      return pi
+  }
+
+  // Calcula os retornos esperados no equilíbrio
+  function calculaRetornosEquilibrio(ativos, covariancias, parametros) {
       var n = ativos.length
       
       // Verifica se as dimensões são compatíveis para o cálculo
@@ -66,7 +78,7 @@ var modeloBlackLitterman = function() {
       }
 
       // Cria o vetor resultante
-      var premios = Array(n).fill(0)
+      var premios = criaMatriz(n, 1)
 
       // Calcula os premios de risco de equilíbrio
       for (var i = 0; i < n; i++) {
@@ -78,34 +90,22 @@ var modeloBlackLitterman = function() {
               soma += covariancias[i][j] * capitalizacao
           }
 
-          premios[i] = soma
+          premios[i][0] = soma / 100 * parametros.aversaoRisco
       }
 
       return premios
   }
 
-  // Calcula os pesos de equilíbrio a partir dos prêmios de risco de equilíbrio
-  function calculaPesosEquilibrio(ativos, parametros, premiosRiscoEquilibrio) {
-      var n = ativos.length;
-      var pi = Array(n).fill(0)
+  // Monta uma matriz com as opiniões dos ativos
+  function montaMatrizOpiniao(ativos) {
+      var n = ativos.length
+      var opiniao = criaMatriz(1, n, 0)
 
       for (var i = 0; i < n; i++) {
-          pi[i] = premiosRiscoEquilibrio[i] * parametros.aversaoRisco
+          opiniao[0][i] = parseFloat(ativos[i].opiniao)
       }
 
-      return pi
-  }
-
-  // Monta um vetor com as opiniões dos ativos
-  function montaVetorOpiniao(ativos) {
-      var n = ativos.length;
-      var opiniao = Array(n).fill(0);
-
-      for (var i = 0; i < n; i++) {
-          opiniao[i] = ativos[i].opiniao;
-      }
-
-      return opiniao;
+      return opiniao
   }
 
   // Calcula o modelo de Black-Litterman
@@ -129,23 +129,39 @@ var modeloBlackLitterman = function() {
           return { status: "erro", mensagem: "Não foi possível calcular a matriz de covariância." }
       }
 
-      var premios_risco_equilibrio = calculaPremiosRiscoEquilibrio(ativos, covariancias)
-      var pesos_prior = calculaPesosEquilibrio(ativos, parametros, premios_risco_equilibrio)
+      var pesos_prior = calculaPesosEquilibrio(ativos)
+      var retornos_prior = calculaRetornosEquilibrio(ativos, covariancias, parametros)
       var covariancias_invertidas = inverteMatriz(covariancias)
-      var covariancias_tau = multiplicaMatrizEscalar(covariancias, parametros.tau)
-      var invertida_covariancias_tau = inverteMatriz(covariancias_tau)
-      var vetor_opiniao = montaVetorOpiniao(ativos)
-      var pt_omega_p = multiplicaVetorVetor(vetor_opiniao, multiplicaMatrizVetor(covariancias_invertidas, vetor_opiniao))
-      var primeiro_termo = inverteMatriz(somaMatrizEscalar(invertida_covariancias_tau, pt_omega_p))
-      var r1 = multiplicaMatrizVetor(invertida_covariancias_tau, pesos_prior)
-      var pesos_posterior = multiplicaMatrizVetor(primeiro_termo, r1)
+
+      var matriz_opiniao = montaMatrizOpiniao(ativos)
+      var matriz_opiniao_transposta = transpoeMatriz(matriz_opiniao)
+
+      var omega = multiplicaMatrizes(multiplicaMatrizes(matriz_opiniao, covariancias), matriz_opiniao_transposta) * parametros.tau * 2
+      var omega_invertido = 1.0 / omega
+
+      var c0 = multiplicaMatrizes(multiplicaMatrizEscalar(matriz_opiniao_transposta, omega_invertido), matriz_opiniao)
+      var c1 = somaMatrizes(multiplicaMatrizEscalar(covariancias_invertidas, 1.0 / parametros.tau), c0)
+      var c2 = inverteMatriz(c1)
+      var c3 = somaMatrizes(c2, covariancias)
+      var c4 = inverteMatriz(c3)
+      
+      var pesos_posterior = somaMatrizes(multiplicaMatrizEscalar(multiplicaMatrizes(covariancias_invertidas, retornos_prior), 1.0 / parametros.tau), multiplicaMatrizEscalar(multiplicaMatrizEscalar(matriz_opiniao_transposta, omega_invertido), 0.05))
+      var retornos_posterior = multiplicaMatrizes(c2, pesos_posterior)
+      var pesos_posterior_ajustado_risco = multiplicaMatrizEscalar(multiplicaMatrizes(c4, retornos_posterior), 1.0 / parametros.aversaoRisco)
+      var percentual_livre_risco = 100.0 - somaCelulasMatriz(pesos_posterior_ajustado_risco) * 100.0
+
+      var x = PortfolioAllocation.equalRiskContributionWeights(covariancias)
 
       return { 
         status: "sucesso", 
-        pesos_prior: pesos_prior, 
-        pesos_posterior: pesos_posterior, 
         covariancias: covariancias, 
-        premios_risco_equilibrio: premios_risco_equilibrio 
+        pesos_prior: pesos_prior, 
+        volatilidades: volatilidades,
+        retornos_prior: retornos_prior,
+        pesos_posterior: pesos_posterior, 
+        retornos_posterior: retornos_posterior,
+        pesos_posterior_risco: pesos_posterior_ajustado_risco,
+        percentual_livre_risco: percentual_livre_risco,
       }
   }
 

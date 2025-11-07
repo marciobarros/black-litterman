@@ -1,3 +1,9 @@
+// Cria uma matriz
+function criaMatriz(rows, cols) {
+  const resultado = Array(rows).fill(0).map(() => Array(cols).fill(0));
+  return resultado;
+}
+
 // Multiplica duas matrizes
 function multiplicaMatrizes(matrixA, matrixB) {
   const rowsA = matrixA.length;
@@ -44,25 +50,6 @@ function multiplicaMatrizEscalar(matrixA, escalar) {
     return resultado;
 }
 
-// Soma um escalar em uma matriz
-function somaMatrizEscalar(matrix, escalar) {
-    // Pega as dimensões da matriz
-    const rowsA = matrix.length;
-    const colsA = matrix[0].length;
-
-    // Cria a matriz resultado
-    const resultado = Array(rowsA).fill(0).map(() => Array(colsA).fill(0));
-
-    // Realiza a multiplicação
-    for (let i = 0; i < rowsA; i++) {
-        for (let j = 0; j < colsA; j++) {
-            resultado[i][j] = matrix[i][j] + escalar;
-        }
-    }
-
-    return resultado;
-}
-
 // Multiplica uma matriz por um vetor
 function multiplicaMatrizVetor(matrix, vector) {
     // Pega as dimensões da matriz
@@ -90,6 +77,33 @@ function multiplicaMatrizVetor(matrix, vector) {
     return resultado;
 }
 
+// Multiplica um vetor por uma matriz
+function multiplicaVetorMatriz(vector, matrix) {
+    // Pega as dimensões da matriz
+    const rows = matrix.length;
+    const cols = matrix[0].length;
+
+    // Pega a dimensão do vetor
+    const n = vector.length;
+
+    // Verifica se a matriz tem as dimensoes adequadas
+    if (!Array.isArray(matrix) || !Array.isArray(matrix[0]) || n !== rows) {
+        throw new Error("A matriz deve ter o mesmo numero de linhas do vetor.");
+    }
+
+    // Cria o vetor resultado
+    const resultado = Array(rows).fill(0);
+
+    // Realiza a multiplicação
+    for (let j = 0; j < cols; j++) {
+        for (let i = 0; i < rows; i++) {
+            resultado[i] += matrix[i][j] * vector[j];
+        }
+    }
+
+    return resultado;
+}
+
 // Multiplia dois vetores
 function multiplicaVetorVetor(vector1, vector2) {
     // Pega as dimensões do primeiro vetor
@@ -109,6 +123,53 @@ function multiplicaVetorVetor(vector1, vector2) {
     // Realiza a multiplicação
     for (let i = 0; i < n1; i++) {
         resultado += vector1[i] * vector2[i];
+    }
+
+    return resultado;
+}
+
+// Soma um escalar em uma matriz
+function somaMatrizEscalar(matrix, escalar) {
+    // Pega as dimensões da matriz
+    const rowsA = matrix.length;
+    const colsA = matrix[0].length;
+
+    // Cria a matriz resultado
+    const resultado = Array(rowsA).fill(0).map(() => Array(colsA).fill(0));
+
+    // Realiza a multiplicação
+    for (let i = 0; i < rowsA; i++) {
+        for (let j = 0; j < colsA; j++) {
+            resultado[i][j] = matrix[i][j] + escalar;
+        }
+    }
+
+    return resultado;
+}
+
+// Soma duas matrizes
+function somaMatrizes(matriz1, matriz2) {
+    // Pega as dimensões da primeira matriz
+    const rowsA = matriz1.length;
+    const colsA = matriz1[0].length;
+
+    // Pega as dimensões da segunda matriz
+    const rowsB = matriz2.length;
+    const colsB = matriz2[0].length;
+
+    // Verifica se as dimensoes são compatíveis para a soma
+    if (rowsA != rowsB || colsA != colsB) {
+        throw new Error("As matrizes devem ter as mesmas dimensões para a soma.");
+    }
+
+    // Cria a matriz resultado
+    const resultado = Array(rowsA).fill(0).map(() => Array(colsA).fill(0));
+
+    // Realiza a multiplicação
+    for (let i = 0; i < rowsA; i++) {
+        for (let j = 0; j < colsA; j++) {
+            resultado[i][j] = matriz1[i][j] + matriz2[i][j];
+        }
     }
 
     return resultado;
@@ -177,4 +238,34 @@ function inverteMatriz(matriz) {
     }
 
     return I;
+}
+
+// Calcula a matriz transposta de uma matriz
+function transpoeMatriz(matriz) {
+    const rows = matriz.length;
+    const cols = matriz[0].length;
+    const transposta = Array.from({ length: cols }, () => Array(rows).fill(0)); 
+    
+    for (let i = 0; i < rows; i++) {
+        for (let j = 0; j < cols; j++) {
+            transposta[j][i] = matriz[i][j];
+        }
+    }
+    
+    return transposta;
+}
+
+// Soma todas as celulas de uma matriz
+function somaCelulasMatriz(matriz) {
+    const rows = matriz.length
+    const cols = matriz[0].length
+    var soma = 0.0
+    
+    for (let i = 0; i < rows; i++) {
+        for (let j = 0; j < cols; j++) {
+            soma += matriz[i][j]
+        }
+    }
+    
+    return soma
 }

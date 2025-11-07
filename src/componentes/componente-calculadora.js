@@ -3,16 +3,16 @@ var componenteCalculadora = function() {
     // Template da página da calculadora
     const template = `
       <div class="container">
-        <h2 class="mb-4 text-left">Calculadora Black-Litterman</h2>
+        <h2 class="text-left">Calculadora Black-Litterman</h2>
         <div id="mensagem-calculadora" class="mt-3"></div>
 
-        <h5 class="mb-4 text-left">Matriz de covariância</h5>
+        <h5 class="mt-8 text-left">Matriz de covariância</h5>
         <div id="matrizCovarianciaContainer" class="mt-3"></div>
 
-        <h5 class="mb-4 text-left">Prêmios de risco no equilíbrio</h5>
+        <h5 class="mt-8 text-left">Pesos e retornos no equilíbrio</h5>
         <div id="premiosRiscoEquilibrioContainer" class="mt-3"></div>
 
-        <h5 class="mb-4 text-left">Pesos de equilíbrio</h5>
+        <h5 class="mt-8 text-left">Pesos e retornos com as opiniões e aversão a risco</h5>
         <div id="pesosEquilibrioContainer" class="mt-3"></div>
       </div>`
 
@@ -45,15 +45,25 @@ var componenteCalculadora = function() {
         $("#matrizCovarianciaContainer").html(html);
     }
 
-    // Apresenta os prêmios de risco de equilíbrio em uma tabela HTML
-    function mostrarPremiosRiscoEquilibrio(ativos, premios) {
+    // Apresenta os pesos e retornos de equilíbrio em uma tabela HTML
+    function mostrarPesosRetornosEquilibrio(ativos, volatilidades, pesos, retornos) {
         let html = `
             <table class="table table-bordered table-hover table-sm bg-white shadow-sm">
+                <thead class="table-secondary">
+                    <tr>
+                        <th>Ativo</th>
+                        <th class='text-right'>Vols</th>
+                        <th class='text-right'>Peso</th>
+                        <th class='text-right'>Retorno</th>
+                    </tr>
+                </thead>
                 <tbody>`;
 
         for (let i = 0; i < ativos.length; i++) {
             html += `<tr><th class="table-secondary">${ativos[i].nomeCurto}</th>`;
-            html += `<td class='text-right'>${premios[i].toFixed(4)}</td>`;
+            html += `<td class='text-right'>${volatilidades[i].toFixed(2)}%</td>`;
+            html += `<td class='text-right'>${pesos[i][0].toFixed(2)}%</td>`;
+            html += `<td class='text-right'>${(retornos[i][0] * 100).toFixed(2)}%</td>`;
             html += `</tr>`;
         }
 
@@ -61,29 +71,30 @@ var componenteCalculadora = function() {
         $("#premiosRiscoEquilibrioContainer").html(html);
     }
 
-    // Apresenta os pesos de equilíbrio em uma tabela HTML
-    function mostrarPesosEquilibrio(ativos, pesos_prior, pesos_posterior) {
+    // Apresenta os pesos e retornos ajustados pela opinião em uma tabela HTML
+    function mostrarPesosAjustadosOpiniao(ativos, pesos, retornos, pesos_ajustados_risco, percentual_livre_risco) {
         let html = `
             <table class="table table-bordered table-hover table-sm bg-white shadow-sm">
                 <thead class="table-secondary">
                     <tr>
                         <th>Ativo</th>
-                        <th class='text-right'>Peso Prior</th>
-                        <th class='text-right'>Opinião</th>
-                        <th class='text-right'>Peso Post</th>
+                        <th class='text-right'>Pesos</th>
+                        <th class='text-right'>Retornos</th>
+                        <th class='text-right'>Pesos Risco</th>
                     </tr>
                 </thead>
                 <tbody>`;
 
         for (let i = 0; i < ativos.length; i++) {
             html += `<tr><th class="table-secondary">${ativos[i].nomeCurto}</th>`;
-            html += `<td class='text-right'>${pesos_prior[i].toFixed(4)}</td>`;
-            html += `<td class='text-right'>${ativos[i].opiniao}</td>`;
-            html += `<td class='text-right'>${pesos_posterior[i].toFixed(4)}</td>`;
+            html += `<td class='text-right'>${pesos[i][0].toFixed(2)}%</td>`;
+            html += `<td class='text-right'>${(retornos[i][0] * 100).toFixed(2)}%</td>`;
+            html += `<td class='text-right'>${(pesos_ajustados_risco[i][0] * 100).toFixed(2)}%</td>`;
             html += `</tr>`;
         }
 
         html += `</tbody></table>`;
+        html += `Investimento em ativo livre de risco: ${percentual_livre_risco.toFixed(2)}%`;
         $("#pesosEquilibrioContainer").html(html);
     }
 
@@ -100,8 +111,8 @@ var componenteCalculadora = function() {
         }
 
         mostrarMatrizCovariancia(ativos, resultado.covariancias)
-        mostrarPremiosRiscoEquilibrio(ativos, resultado.premios_risco_equilibrio)
-        mostrarPesosEquilibrio(ativos, resultado.pesos_prior, resultado.pesos_posterior)
+        mostrarPesosRetornosEquilibrio(ativos, resultado.volatilidades, resultado.pesos_prior, resultado.retornos_prior)
+        mostrarPesosAjustadosOpiniao(ativos, resultado.pesos_posterior, resultado.retornos_posterior, resultado.pesos_posterior_risco, resultado.percentual_livre_risco)
     }
 
     return { template, apresenta }
