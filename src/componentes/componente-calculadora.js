@@ -78,7 +78,7 @@ var componenteCalculadora = function() {
                 <thead class="table-secondary">
                     <tr>
                         <th>Ativo</th>
-                        <th class='text-right'>Pesos</th>
+                        <!-- th class='text-right'>Pesos</th -->
                         <th class='text-right'>Retornos</th>
                         <th class='text-right'>Alocação</th>
                     </tr>
@@ -87,7 +87,7 @@ var componenteCalculadora = function() {
 
         for (let i = 0; i < ativos.length; i++) {
             html += `<tr><th class="table-secondary">${ativos[i].nomeCurto}</th>`;
-            html += `<td class='text-right'>${pesos[i][0].toFixed(2)}%</td>`;
+            //html += `<td class='text-right'>${pesos[i][0].toFixed(2)}%</td>`;
             html += `<td class='text-right'>${(retornos[i][0] * 100).toFixed(2)}%</td>`;
             html += `<td class='text-right'>${(pesos_ajustados_risco[i][0] * 100).toFixed(2)}%</td>`;
             html += `</tr>`;
