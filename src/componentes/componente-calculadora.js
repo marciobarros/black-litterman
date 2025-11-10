@@ -12,7 +12,10 @@ var componenteCalculadora = function() {
         <h5 class="mt-8 text-left">Pesos e retornos no equilíbrio</h5>
         <div id="premiosRiscoEquilibrioContainer" class="mt-3"></div>
 
-        <h5 class="mt-8 text-left">Pesos e retornos com as opiniões e aversão a risco</h5>
+        <h5 class="mt-8 text-left">Retornos e alocação ajustados à opinião</h5>
+        <div id="retornosAjustadosOpiniaoContainer" class="mt-3"></div>
+
+        <h5 class="mt-8 text-left">Pesos e retornos pelo modelo de Black & Litterman</h5>
         <div id="pesosEquilibrioContainer" class="mt-3"></div>
       </div>`
 
@@ -52,9 +55,10 @@ var componenteCalculadora = function() {
                 <thead class="table-secondary">
                     <tr>
                         <th>Ativo</th>
-                        <th class='text-right'>Vols</th>
-                        <th class='text-right'>Peso</th>
+                        <th class='text-right'>Volatilidade</th>
+                        <th class='text-right'>Capitalização</th>
                         <th class='text-right'>Retorno</th>
+                        <th class='text-right'>Alocação</th>
                     </tr>
                 </thead>
                 <tbody>`;
@@ -64,6 +68,7 @@ var componenteCalculadora = function() {
             html += `<td class='text-right'>${volatilidades[i].toFixed(2)}%</td>`;
             html += `<td class='text-right'>${pesos[i][0].toFixed(2)}%</td>`;
             html += `<td class='text-right'>${(retornos[i][0] * 100).toFixed(2)}%</td>`;
+            html += `<td class='text-right'>${pesos[i][0].toFixed(2)}%</td>`;
             html += `</tr>`;
         }
 
@@ -71,8 +76,33 @@ var componenteCalculadora = function() {
         $("#premiosRiscoEquilibrioContainer").html(html);
     }
 
-    // Apresenta os pesos e retornos ajustados pela opinião em uma tabela HTML
-    function mostrarPesosAjustadosOpiniao(ativos, pesos, retornos, pesos_ajustados_risco, percentual_livre_risco) {
+    // Apresenta os retornos e a alocação ajustados pela opinião em uma tabela HTML
+    function mostrarRetornosAjustadosOpiniao(ativos, retornos, alocacao, percentual_livre_risco) {
+        let html = `
+            <table class="table table-bordered table-hover table-sm bg-white shadow-sm">
+                <thead class="table-secondary">
+                    <tr>
+                        <th>Ativo</th>
+                        <th class='text-right'>Retornos</th>
+                        <th class='text-right'>Alocação</th>
+                    </tr>
+                </thead>
+                <tbody>`;
+
+        for (let i = 0; i < ativos.length; i++) {
+            html += `<tr><th class="table-secondary">${ativos[i].nomeCurto}</th>`;
+            html += `<td class='text-right'>${(retornos[i][0] * 100).toFixed(2)}%</td>`;
+            html += `<td class='text-right'>${(alocacao[i][0] * 100).toFixed(2)}%</td>`;
+            html += `</tr>`;
+        }
+
+        html += `</tbody></table>`;
+        html += `Investimento em ativo livre de risco: ${percentual_livre_risco.toFixed(2)}%`;
+        $("#retornosAjustadosOpiniaoContainer").html(html);
+    }
+        
+    // Apresenta os pesos e retornos retornados pelo modelo de B&L em uma tabela HTML
+    function mostrarPesosBlackLitterman(ativos, retornos, pesos_ajustados_risco, percentual_livre_risco) {
         let html = `
             <table class="table table-bordered table-hover table-sm bg-white shadow-sm">
                 <thead class="table-secondary">
@@ -112,7 +142,8 @@ var componenteCalculadora = function() {
 
         mostrarMatrizCovariancia(ativos, resultado.covariancias)
         mostrarPesosRetornosEquilibrio(ativos, resultado.volatilidades, resultado.pesos_prior, resultado.retornos_prior)
-        mostrarPesosAjustadosOpiniao(ativos, resultado.pesos_posterior, resultado.retornos_posterior, resultado.pesos_posterior_risco, resultado.percentual_livre_risco)
+        mostrarRetornosAjustadosOpiniao(ativos, resultado.retornos_ajustados_opiniao, resultado.alocacao_ajustada_opiniao, resultado.percentual_livre_risco_ajustada_opiniao)
+        mostrarPesosBlackLitterman(ativos, resultado.retornos_posterior, resultado.pesos_posterior_risco, resultado.percentual_livre_risco)
     }
 
     return { template, apresenta }

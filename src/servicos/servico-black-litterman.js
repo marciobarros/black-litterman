@@ -108,6 +108,46 @@ var modeloBlackLitterman = function() {
       return opiniao
   }
 
+  // Ajusta os retornos esperados com base nas opiniões dos investidores
+  function ajustaRetornosOpiniao(matriz_opiniao, retornos_prior, ajusteRetorno) {
+    var indices_subidas = []
+    var indices_quedas = []
+
+    for (var i = 0; i < matriz_opiniao[0].length; i++) {
+       if (matriz_opiniao[0][i] > 0) {
+           indices_subidas.push(i)
+       } else if (matriz_opiniao[0][i] < 0) {
+           indices_quedas.push(i)
+       }
+    } 
+
+    if (indices_subidas.length == 1 && indices_quedas.length >= 1) {
+        var retornos_ajustados = copiaMatriz(retornos_prior)
+
+        var indice_subida = indices_subidas[0]
+        retornos_ajustados[indice_subida][0] += ajusteRetorno / 2.0
+
+        var indice_queda = indices_quedas[0]
+        var soma = 0.0
+
+        for (var i = 1; i < indices_quedas.length; i++) {
+            var indice_queda_i = indices_quedas[i]
+            soma += Math.abs(matriz_opiniao[0][indice_queda_i]) * (retornos_prior[indice_queda_i][0] - retornos_prior[indice_queda][0])
+        }
+        
+        retornos_ajustados[indice_queda][0] = retornos_ajustados[indice_subida][0] - ajusteRetorno - soma
+
+        for (var i = 1; i < indices_quedas.length; i++) {
+            var indice_queda_i = indices_quedas[i]
+            retornos_ajustados[indice_queda_i][0] = retornos_ajustados[indice_queda][0] + retornos_prior[indice_queda_i][0] - retornos_prior[indice_queda][0]
+        }
+
+        return retornos_ajustados
+    }
+
+    return null
+  }
+
   // Calcula o modelo de Black-Litterman
   function calculaModeloBlackLitterman(ativos, correlacoes, parametros) {
       var capitalizacaoTotal = somaCapitalizacao(ativos)
@@ -131,10 +171,14 @@ var modeloBlackLitterman = function() {
 
       var pesos_prior = calculaPesosEquilibrio(ativos)
       var retornos_prior = calculaRetornosEquilibrio(ativos, covariancias, parametros)
-      var covariancias_invertidas = inverteMatriz(covariancias)
 
+      var covariancias_invertidas = inverteMatriz(covariancias)
       var matriz_opiniao = montaMatrizOpiniao(ativos)
       var matriz_opiniao_transposta = transpoeMatriz(matriz_opiniao)
+
+      var retornos_ajustados_opiniao = ajustaRetornosOpiniao(matriz_opiniao, retornos_prior, 0.05)
+      var alocacao_ajustada_opiniao = multiplicaMatrizEscalar(multiplicaMatrizes(covariancias_invertidas, retornos_ajustados_opiniao), 1.0 / parametros.aversaoRisco)
+      var percentual_livre_risco_ajustada_opiniao = 100.0 - somaCelulasMatriz(alocacao_ajustada_opiniao) * 100.0
 
       var omega = multiplicaMatrizes(multiplicaMatrizes(matriz_opiniao, covariancias), matriz_opiniao_transposta) * parametros.tau
       var omega_invertido = 1.0 / omega
@@ -150,14 +194,18 @@ var modeloBlackLitterman = function() {
       var pesos_posterior_ajustado_risco = multiplicaMatrizEscalar(multiplicaMatrizes(c4, retornos_posterior), 1.0 / parametros.aversaoRisco)
       var percentual_livre_risco = 100.0 - somaCelulasMatriz(pesos_posterior_ajustado_risco) * 100.0
 
-      var x = PortfolioAllocation.equalRiskContributionWeights(covariancias)
-
       return { 
         status: "sucesso", 
         covariancias: covariancias, 
+        
         pesos_prior: pesos_prior, 
         volatilidades: volatilidades,
         retornos_prior: retornos_prior,
+
+        retornos_ajustados_opiniao: retornos_ajustados_opiniao,
+        alocacao_ajustada_opiniao: alocacao_ajustada_opiniao,
+        percentual_livre_risco_ajustada_opiniao: percentual_livre_risco_ajustada_opiniao,
+        
         pesos_posterior: pesos_posterior, 
         retornos_posterior: retornos_posterior,
         pesos_posterior_risco: pesos_posterior_ajustado_risco,

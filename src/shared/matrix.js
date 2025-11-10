@@ -1,7 +1,22 @@
 // Cria uma matriz
 function criaMatriz(rows, cols) {
-  const resultado = Array(rows).fill(0).map(() => Array(cols).fill(0));
-  return resultado;
+    const resultado = Array(rows).fill(0).map(() => Array(cols).fill(0));
+    return resultado;
+}
+
+// Copia uma matriz
+function copiaMatriz(matrix) {
+    const rows = matrix.length
+    const cols = matrix[0].length
+    const resultado = Array(rows).fill(0).map(() => Array(cols).fill(0))
+
+    for (let i = 0; i < rows; i++) {
+        for (let j = 0; j < cols; j++) {
+            resultado[i][j] = matrix[i][j]
+        }
+    }
+
+    return resultado
 }
 
 // Multiplica duas matrizes

@@ -18,5 +18,6 @@ body { overflow: hidden; }
 /* Painel de calculadora */
 .text-right { text-align: right; }
 .mt-8 { margin-top: 32px; }
-#premiosRiscoEquilibrioContainer { max-width: 300px; }
+#premiosRiscoEquilibrioContainer { max-width: 600px; }
+#retornosAjustadosOpiniaoContainer { max-width: 450px; }
 #pesosEquilibrioContainer { max-width: 450px; }
