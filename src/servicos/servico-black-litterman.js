@@ -194,6 +194,13 @@ var modeloBlackLitterman = function() {
       var pesos_posterior_ajustado_risco = multiplicaMatrizEscalar(multiplicaMatrizes(c4, retornos_posterior), 1.0 / parametros.aversaoRisco)
       var percentual_livre_risco = 100.0 - somaCelulasMatriz(pesos_posterior_ajustado_risco) * 100.0
 
+      var A = omega / parametros.tau + multiplicaMatrizes(matriz_opiniao, multiplicaMatrizes(covariancias, matriz_opiniao_transposta))[0][0] / (1.0 + parametros.tau)
+      var lambda = parametros.tau * omega_invertido * 0.05 / parametros.aversaoRisco
+      lambda = lambda - (1.0 / A) * (1.0 / (1.0 + parametros.tau)) * multiplicaMatrizes(matriz_opiniao, multiplicaMatrizes(covariancias, pesos_prior))[0][0] / 100.0
+      lambda = lambda - (1.0 / A) * (1.0 / (1.0 + parametros.tau)) * multiplicaMatrizes(matriz_opiniao, multiplicaMatrizes(covariancias, matriz_opiniao_transposta))[0][0] * parametros.tau * omega_invertido * 0.05 / parametros.aversaoRisco
+
+      // TODO próximo passo é trabalhar com uma matriz de opiniões para ver o que vai dar ...
+
       return { 
         status: "sucesso", 
         covariancias: covariancias, 
