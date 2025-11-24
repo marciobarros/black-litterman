@@ -199,7 +199,9 @@ var modeloBlackLitterman = function() {
       lambda = lambda - (1.0 / A) * (1.0 / (1.0 + parametros.tau)) * multiplicaMatrizes(matriz_opiniao, multiplicaMatrizes(covariancias, pesos_prior))[0][0] / 100.0
       lambda = lambda - (1.0 / A) * (1.0 / (1.0 + parametros.tau)) * multiplicaMatrizes(matriz_opiniao, multiplicaMatrizes(covariancias, matriz_opiniao_transposta))[0][0] * parametros.tau * omega_invertido * 0.05 / parametros.aversaoRisco
 
-      // TODO próximo passo é trabalhar com uma matriz de opiniões para ver o que vai dar ...
+      // TODO capturar e criticar a matriz de opiniao
+
+      // TODO aplicar a matriz no processo de calculo
 
       return { 
         status: "sucesso", 

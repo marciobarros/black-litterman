@@ -55,7 +55,7 @@ var componenteEditorCorrelacao = function() {
     const val = parseFloat($(this).val());
     const row = parseInt($(this).data("row"));
     const col = parseInt($(this).data("col"));
-    $(`input[data-row='${col}'][data-col='${row}']`).val(isNaN(val) ? "" : val);
+    $(`.container-correlacao input[data-row='${col}'][data-col='${row}']`).val(isNaN(val) ? "" : val);
     apresentaResultadoPositivoDefinida();
   }
 
@@ -76,8 +76,8 @@ var componenteEditorCorrelacao = function() {
 
   // Pega a matriz da tabela representada na pagina
   function pegaMatrizTabela() {
-    const inputs = $("table input");
-    const n = $("table thead th").length - 1;
+    const inputs = $(".container-correlacao table input");
+    const n = $(".container-correlacao table thead th").length - 1;
     let M = Array.from({length: n}, () => Array(n).fill(0));
 
     inputs.each(function() {
@@ -124,7 +124,7 @@ var componenteEditorCorrelacao = function() {
   // Função inicial
   function apresenta() {
       geraTabelaMatrizCorrelacao()
-      $(document).on("input", ".valor", espelhaValoresCorrelacao);
+      $(document).on("input", ".container-correlacao .valor", espelhaValoresCorrelacao);
   }
 
   return { template, apresenta }

@@ -15,6 +15,10 @@ body { overflow: hidden; }
 /* Painel de correlacoes */
 .container-correlacao input[type="number"] { width: 80px; text-align: center; }
 
+/* Painel de opiniões */
+.container-opiniao input[type="number"] { width: 100px; }
+.container-opiniao .opiniao-desabilitada { background-color: #e9ecef; color: #6c757d; }
+
 /* Painel de calculadora */
 .text-right { text-align: right; }
 .mt-8 { margin-top: 32px; }

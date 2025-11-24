@@ -24,6 +24,18 @@ var servicoModelo = function() {
     salvaDados(dados);
   }
 
+  // Carrega as opinioes do localStorage
+  function pegaOpinioes() {
+    return pegaDados().opinioes || [];
+  }
+
+  // Salva as opinioes no localStorage
+  function salvaOpinioes(opinioes) {
+    var dados = pegaDados();
+    dados.opinioes = opinioes;
+    salvaDados(dados);
+  }
+
   // Carrega a correlacao do LocalStorage
   function pegaCorrelacaoAtivos(ativos) {
       const jsonMatriz = pegaDados().correlacao || {};
@@ -83,7 +95,11 @@ var servicoModelo = function() {
   }
 
   return { 
-    pegaAtivos, salvaAtivos, pegaCorrelacaoAtivos, salvaCorrelacaoAtivos, pegaParametros, salvaParametros, pegaDados, salvaDados
+    pegaAtivos, salvaAtivos, 
+    pegaOpinioes, salvaOpinioes,
+    pegaCorrelacaoAtivos, salvaCorrelacaoAtivos, 
+    pegaParametros, salvaParametros, 
+    pegaDados, salvaDados
   }
 
 }()

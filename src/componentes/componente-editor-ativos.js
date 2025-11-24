@@ -29,10 +29,6 @@ var componenteEditorAtivos = function() {
                   <label class="form-label">Cap. (%)</label>
                   <input type="number" class="form-control" id="capitalizacao" required min="0" max="100" step="0.01">
                 </div>
-                <div class="col-md-2">
-                  <label class="form-label">Opinião (%)</label>
-                  <input type="number" class="form-control" id="opiniao" required min="-100" max="100" step="0.001">
-                </div>
               </div>
               <div class="mt-3">
                 <button type="submit" class="btn btn-primary">Salvar</button>
@@ -53,7 +49,6 @@ var componenteEditorAtivos = function() {
                   <th class="sortable" data-key="nomeLongo">Nome longo</th>
                   <th class="sortable" data-key="volatilidade">Volatilidade (%)</th>
                   <th class="sortable" data-key="capitalizacao">Capitalização (%)</th>
-                  <th class="sortable" data-key="opiniao">Opinião (%)</th>
                   <th class="text-center" style="width: 100px">Ações</th>
                 </tr>
               </thead>
@@ -72,7 +67,7 @@ var componenteEditorAtivos = function() {
       elements.sort((a, b) => {
         let valA = a[sortConfig.key];
         let valB = b[sortConfig.key];
-        if (sortConfig.key === "volatilidade" || sortConfig.key === "capitalizacao" || sortConfig.key === "opiniao") {
+        if (sortConfig.key === "volatilidade" || sortConfig.key === "capitalizacao") {
           valA = parseFloat(valA);
           valB = parseFloat(valB);
         } else {
@@ -100,7 +95,6 @@ var componenteEditorAtivos = function() {
           <td>${el.nomeLongo}</td>
           <td>${parseFloat(el.volatilidade).toFixed(2)}</td>
           <td>${parseFloat(el.capitalizacao).toFixed(2)}</td>
-          <td>${parseFloat(el.opiniao).toFixed(3)}</td>
           <td class="text-center">
             <button class="btn btn-sm btn-warning me-2" onclick="componenteEditorAtivos.editaAtivo(${index})"><i class="bi bi-pencil"></i></button>
             <button class="btn btn-sm btn-danger" onclick="componenteEditorAtivos.removeAtivo(${index})"><i class="bi bi-trash"></i></button>
@@ -117,7 +111,6 @@ var componenteEditorAtivos = function() {
     $("#nome-longo").val(el.nomeLongo);
     $("#volatilidade").val(el.volatilidade);
     $("#capitalizacao").val(el.capitalizacao);
-    $("#opiniao").val(el.opiniao);
     $("#editIndex").val(index);
     $("#cancelEdit").show();
   }
@@ -129,7 +122,6 @@ var componenteEditorAtivos = function() {
     const nomeLongo = $("#nome-longo").val().trim();
     const volatilidade = $("#volatilidade").val();
     const capitalizacao = $("#capitalizacao").val();
-    const opiniao = $("#opiniao").val();
     const editIndex = $("#editIndex").val();
 
     if (!nomeCurto) 
@@ -150,11 +142,8 @@ var componenteEditorAtivos = function() {
     if (capitalizacao > 100 || capitalizacao < 0) 
       return alert("A capitalização do ativo deve estar entre 0% e 100%.");
 
-    if (opiniao > 100 || opiniao < -100) 
-      return alert("A opinião sobre o ativo deve estar entre 0% e 100%.");
-
     let ativos = servicoModelo.pegaAtivos();
-    const novoAtivo = { nomeCurto, nomeLongo, volatilidade, capitalizacao, opiniao };
+    const novoAtivo = { nomeCurto, nomeLongo, volatilidade, capitalizacao };
 
     if (editIndex === "") {
       ativos.push(novoAtivo);
