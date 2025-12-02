@@ -22,6 +22,7 @@ body { overflow: hidden; }
 /* Painel de calculadora */
 .text-right { text-align: right; }
 .mt-8 { margin-top: 32px; }
-#premiosRiscoEquilibrioContainer { max-width: 600px; }
-#retornosAjustadosOpiniaoContainer { max-width: 450px; }
-#pesosEquilibrioContainer { max-width: 450px; }
+.tabela-resultados { width: 100% } 
+.tabela-resultados th.ativo { width: 120px; font-weight: bold; }
+.tabela-resultados td.ativo { font-weight: bold; }
+.tabela-resultados td.retorno-opiniao { border-top: 1px solid black; }

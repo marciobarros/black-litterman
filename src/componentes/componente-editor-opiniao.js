@@ -27,7 +27,7 @@ var componenteEditorOpiniao = function() {
                       <th>#</th>
                       ${nomes.map(n => `<th>${n}</th>`).join("")}
                       <th>Retorno</th>
-                      <th>Omega</th>
+                      <th>Peso</th>
                       <th></th>
                     </tr>
                   </thead>
@@ -92,8 +92,8 @@ var componenteEditorOpiniao = function() {
     servicoModelo.salvaOpinioes(opinioes)
   }
 
-  // Salva o omega associado a uma opinião
-  function salvaOmegaOpiniao(event) {
+  // Salva o peso associado a uma opinião
+  function salvaPesoOpiniao(event) {
     const indiceOpiniao = parseInt($(event.currentTarget).data("indice"))
     var opinioes = servicoModelo.pegaOpinioes()
     opinioes[indiceOpiniao].omega = parseFloat($(event.currentTarget).val())
@@ -103,7 +103,7 @@ var componenteEditorOpiniao = function() {
   // Cria uma nova opinião
   function novaOpiniao() {
     var opinioes = servicoModelo.pegaOpinioes()
-    opinioes.push({ retorno: 0, omega: 0, habilitada: true })
+    opinioes.push({ retorno: 0, omega: 1, habilitada: true })
     servicoModelo.salvaOpinioes(opinioes)
     geraTabelaOpiniao()
   }
@@ -140,7 +140,7 @@ var componenteEditorOpiniao = function() {
       geraTabelaOpiniao()
       $(document).on("input", ".container-opiniao .valor", salvaParticipacaoAtivoOpiniao)
       $(document).on("input", ".container-opiniao .retorno", salvaRetornoOpiniao)
-      $(document).on("input", ".container-opiniao .omega", salvaOmegaOpiniao)
+      $(document).on("input", ".container-opiniao .omega", salvaPesoOpiniao)
       $(document).on('click', '.container-opiniao .btn-remove-opiniao', removeOpiniao)
       $(document).on('click', '.container-opiniao .btn-habilita-opiniao', habilitaOpiniao)
       $(document).on('click', '.container-opiniao .btn-desabilita-opiniao', desabilitaOpiniao)
