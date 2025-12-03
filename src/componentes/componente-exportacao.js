@@ -42,7 +42,7 @@ var componenteExportacao = function() {
     const texto = $("#importacao").val();
     servicoModelo.salvaDados(JSON.parse(texto));
     $("#mensagem-importacao").html(`<div class="alert alert-success">✅ Modelo importado com sucesso!</div>`);
-    $("#exportacao").val(JSON.stringify(pegaDados(), null, 2));
+    $("#exportacao").val(JSON.stringify(servicoModelo.pegaDados(), null, 2));
   }
 
   // Função inicial
