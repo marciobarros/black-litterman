@@ -29,9 +29,9 @@ var modeloBlackLitterman = function() {
                     soma += opiniao
                 }
 
-                if (Math.abs(soma) > 0.0001) {
-                    return { status: "erro", mensagem: "O somatório dos componentes de uma opinião deve ser igual a zero." }
-                }
+                // if (Math.abs(soma) > 0.0001) {
+                //     return { status: "erro", mensagem: "O somatório dos componentes de uma opinião deve ser igual a zero." }
+                // }
 
                 if (opinioes[i].retorno < 0.001) {
                     return { status: "erro", mensagem: `O retorno da opinião #${i+1} deve ser maior que zero.` }
