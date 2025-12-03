@@ -177,7 +177,7 @@ var componenteCalculadora = function() {
         var resultado = modeloBlackLitterman.calculaModeloBlackLitterman(ativos, correlacoes, opinioes, parametros)
 
         if (resultado.status == "erro") {
-            $("#mensagem-calculadora").html(f`<div class="alert alert-danger">${resultado.mensagem}</div>`);
+            $("#mensagem-calculadora").html(`<div class="alert alert-danger">${resultado.mensagem}</div>`);
             return;
         }
 
