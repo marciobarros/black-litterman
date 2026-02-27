@@ -306,7 +306,7 @@ var modeloBlackLitterman = function() {
         var m1 = multiplicaMatrizEscalar(multiplicaMatrizes(covariancias_invertidas, retornos_prior), 1.0 / parametros.tau)
         var m2 = multiplicaMatrizes(multiplicaMatrizes(matriz_opiniao_transposta, omega_invertido), retornos_opiniao)
         var pesos_posterior = (m2.length == 0) ? m1 : somaMatrizes(m1, m2)
-        
+
         var retornos_posterior = multiplicaMatrizes(c2, pesos_posterior)
         var pesos_posterior_ajustado_risco = multiplicaMatrizEscalar(multiplicaMatrizes(c4, retornos_posterior), 1.0 / parametros.aversaoRisco)
         var diferenca_alocacao = somaMatrizes(pesos_posterior_ajustado_risco, multiplicaMatrizEscalar(multiplicaMatrizEscalar(capitalizacoes, -1.0 / 100.0), 1.0 / (1.0 + parametros.tau)))
@@ -317,7 +317,11 @@ var modeloBlackLitterman = function() {
         var w_sobre_tau = calculaMatrizWSobreTau(omega, parametros.tau)
 
         // Calcula o vetor lambda
-        var A = somaMatrizes(multiplicaMatrizEscalar(omega, 1.0 / parametros.tau), multiplicaMatrizEscalar(multiplicaMatrizes(participacao_opiniao, multiplicaMatrizes(covariancias, matriz_opiniao_transposta)), 1.0 / (1.0 + parametros.tau)))
+        var mx = (matriz_opiniao_transposta.length == 0) ? [] : multiplicaMatrizes(covariancias, matriz_opiniao_transposta)
+        var my = multiplicaMatrizEscalar(multiplicaMatrizes(participacao_opiniao, mx), 1.0 / (1.0 + parametros.tau))
+        var mz = multiplicaMatrizEscalar(omega, 1.0 / parametros.tau)
+        var A = (my.length == 0) ? mz : somaMatrizes(mz, my)
+        
         var componente_lambda = multiplicaMatrizEscalar(multiplicaMatrizes(multiplicaMatrizes(inverteMatriz(A), participacao_opiniao), covariancias), 1.0 / (1.0 + parametros.tau))
         var lambda_termo1 = multiplicaMatrizEscalar(multiplicaMatrizes(multiplicaMatrizEscalar(omega_invertido, parametros.tau), retornos_opiniao), 1.0 / parametros.aversaoRisco)
         var lambda_termo2 = multiplicaMatrizEscalar(multiplicaMatrizes(componente_lambda, capitalizacoes), -1.0 / 100.0)
