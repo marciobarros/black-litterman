@@ -220,7 +220,8 @@ var modeloBlackLitterman = function() {
     function ajustaRetornosOpiniao(matriz_opiniao, retornos_prior, retornos_opiniao, parametros, covariancias, omega_invertido) {
         var m1 = inverteMatriz(multiplicaMatrizEscalar(covariancias, parametros.tau))
         var m2 = multiplicaMatrizes(multiplicaMatrizes(transpoeMatriz(matriz_opiniao), omega_invertido), matriz_opiniao)
-        var c1 = somaMatrizes(m1, m2)
+
+        var c1 = (m2.length == 0) ? m1 : somaMatrizes(m1, m2)
         var c2 = inverteMatriz(c1)
 
         var c3 = multiplicaMatrizes(m1, retornos_prior)
