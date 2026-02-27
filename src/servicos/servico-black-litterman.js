@@ -303,7 +303,10 @@ var modeloBlackLitterman = function() {
         var c3 = somaMatrizes(c2, covariancias)
         var c4 = inverteMatriz(c3)
         
-        var pesos_posterior = somaMatrizes(multiplicaMatrizEscalar(multiplicaMatrizes(covariancias_invertidas, retornos_prior), 1.0 / parametros.tau), multiplicaMatrizes(multiplicaMatrizes(matriz_opiniao_transposta, omega_invertido), retornos_opiniao))
+        var m1 = multiplicaMatrizEscalar(multiplicaMatrizes(covariancias_invertidas, retornos_prior), 1.0 / parametros.tau)
+        var m2 = multiplicaMatrizes(multiplicaMatrizes(matriz_opiniao_transposta, omega_invertido), retornos_opiniao)
+        var pesos_posterior = (m2.length == 0) ? m1 : somaMatrizes(m1, m2)
+        
         var retornos_posterior = multiplicaMatrizes(c2, pesos_posterior)
         var pesos_posterior_ajustado_risco = multiplicaMatrizEscalar(multiplicaMatrizes(c4, retornos_posterior), 1.0 / parametros.aversaoRisco)
         var diferenca_alocacao = somaMatrizes(pesos_posterior_ajustado_risco, multiplicaMatrizEscalar(multiplicaMatrizEscalar(capitalizacoes, -1.0 / 100.0), 1.0 / (1.0 + parametros.tau)))
