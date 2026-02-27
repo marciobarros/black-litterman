@@ -22,9 +22,9 @@ function copiaMatriz(matrix) {
 // Multiplica duas matrizes
 function multiplicaMatrizes(matrixA, matrixB) {
   const rowsA = matrixA.length;
-  const colsA = matrixA[0].length;
+  const colsA = (rowsA > 0) ? matrixA[0].length : 0;
   const rowsB = matrixB.length;
-  const colsB = matrixB[0].length;
+  const colsB = (rowsB > 0) ? matrixB[0].length : 0;
 
   // Verifica se as dimensões são compatíveis para multiplicação
   if (colsA !== rowsB) {
