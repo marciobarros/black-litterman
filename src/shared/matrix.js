@@ -179,7 +179,7 @@ function somaMatrizes(matriz1, matriz2) {
 
     // Verifica se as dimensoes são compatíveis para a soma
     if (rowsA != rowsB || colsA != colsB) {
-        throw new Error("As matrizes devem ter as mesmas dimensões para a soma.");
+        throw new Error("As matrizes devem ter as mesmas dimensões para a soma (" + rowsA + "x" + colsA + " vs " + rowsB + "x" + colsB + ").");
     }
 
     // Cria a matriz resultado
