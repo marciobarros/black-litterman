@@ -226,7 +226,7 @@ var modeloBlackLitterman = function() {
 
         var c3 = multiplicaMatrizes(m1, retornos_prior)
         var c4 = multiplicaMatrizes(multiplicaMatrizes(transpoeMatriz(matriz_opiniao), omega_invertido), retornos_opiniao)
-        var c5 = somaMatrizes(c3, c4)
+        var c5 = (c4.length == 0) ? c3 : somaMatrizes(c3, c4)
         var retornos_ajustados = multiplicaMatrizes(c2, c5)
 
         return retornos_ajustados
