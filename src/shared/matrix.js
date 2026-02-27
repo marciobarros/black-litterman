@@ -258,6 +258,11 @@ function inverteMatriz(matriz) {
 // Calcula a matriz transposta de uma matriz
 function transpoeMatriz(matriz) {
     const rows = matriz.length;
+
+    if (rows == 0) {
+        return [];
+    }
+
     const cols = matriz[0].length;
     const transposta = Array.from({ length: cols }, () => Array(rows).fill(0)); 
     
