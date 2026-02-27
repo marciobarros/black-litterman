@@ -297,7 +297,8 @@ var modeloBlackLitterman = function() {
         var percentual_livre_risco_ajustada_opiniao = 100.0 - somaCelulasMatriz(alocacao_ajustada_opiniao) * 100.0
 
         var c0 = multiplicaMatrizes(multiplicaMatrizes(matriz_opiniao_transposta, omega_invertido), participacao_opiniao)
-        var c1 = somaMatrizes(multiplicaMatrizEscalar(covariancias_invertidas, 1.0 / parametros.tau), c0)
+        var mtau = multiplicaMatrizEscalar(covariancias_invertidas, 1.0 / parametros.tau)
+        var c1 = (c0.length == 0) ? mtau : somaMatrizes(mtau, c0)
         var c2 = inverteMatriz(c1)
         var c3 = somaMatrizes(c2, covariancias)
         var c4 = inverteMatriz(c3)
