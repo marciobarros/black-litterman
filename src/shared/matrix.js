@@ -201,7 +201,7 @@ function inverteMatriz(matriz) {
 
     // Verifica se a matriz é vazia
     if (matriz.length === 0 || matriz[0].length === 0) {
-        throw new Error("A matriz não pode ser vazia.");
+        return criaMatriz(0, 0);
     }
 
     // Verifica se a matriz é quadrada
