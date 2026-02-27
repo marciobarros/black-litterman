@@ -195,6 +195,11 @@ var modeloBlackLitterman = function() {
     // Calcula a matriz Omega KxK
     function calculaMatrizOmega(matriz_opiniao, covariancias, pesos_opiniao, tau) {
         var numero_opinioes = matriz_opiniao.length
+
+        if (numero_opinioes == 0) {
+            return criaMatriz(0, 0)
+        }
+
         var numero_ativos = matriz_opiniao[0].length
         var omega = criaMatriz(numero_opinioes, numero_opinioes, 0)
 
