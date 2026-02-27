@@ -194,8 +194,18 @@ function somaMatrizes(matriz1, matriz2) {
 function inverteMatriz(matriz) {
     const n = matriz.length;
 
+    // Verifica se a matriz está representada corretamente
+    if (!Array.isArray(matriz)) {
+        throw new Error("A matriz deve ser representada como um array de arrays.");
+    }
+
+    // Verifica se a matriz é vazia
+    if (matriz.length === 0 || matriz[0].length === 0) {
+        throw new Error("A matriz não pode ser vazia.");
+    }
+
     // Verifica se a matriz é quadrada
-    if (!Array.isArray(matriz) || !Array.isArray(matriz[0]) || n !== matriz[0].length) {
+    if (!Array.isArray(matriz[0]) || n !== matriz[0].length) {
         throw new Error("A matriz deve ser quadrada.");
     }
 
