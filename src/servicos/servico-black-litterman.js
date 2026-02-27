@@ -321,9 +321,15 @@ var modeloBlackLitterman = function() {
         var my = multiplicaMatrizEscalar(multiplicaMatrizes(participacao_opiniao, mx), 1.0 / (1.0 + parametros.tau))
         var mz = multiplicaMatrizEscalar(omega, 1.0 / parametros.tau)
         var A = (my.length == 0) ? mz : somaMatrizes(mz, my)
-        
-        var componente_lambda = multiplicaMatrizEscalar(multiplicaMatrizes(multiplicaMatrizes(inverteMatriz(A), participacao_opiniao), covariancias), 1.0 / (1.0 + parametros.tau))
-        var lambda_termo1 = multiplicaMatrizEscalar(multiplicaMatrizes(multiplicaMatrizEscalar(omega_invertido, parametros.tau), retornos_opiniao), 1.0 / parametros.aversaoRisco)
+
+        var A_invertida = inverteMatriz(A)
+        var c11 = (participacao_opiniao.length == 0) ? [] : multiplicaMatrizes(A_invertida, participacao_opiniao)
+        var componente_lambda = multiplicaMatrizEscalar(multiplicaMatrizes(c11, covariancias), 1.0 / (1.0 + parametros.tau))
+
+        var c12 = multiplicaMatrizEscalar(omega_invertido, parametros.tau)
+        var c13 = (retornos_opiniao.length == 0) ? [] : multiplicaMatrizes(c12, retornos_opiniao)
+        var lambda_termo1 = multiplicaMatrizEscalar(c13, 1.0 / parametros.aversaoRisco)
+
         var lambda_termo2 = multiplicaMatrizEscalar(multiplicaMatrizes(componente_lambda, capitalizacoes), -1.0 / 100.0)
         var lambda_termo3 = multiplicaMatrizEscalar(multiplicaMatrizes(multiplicaMatrizes(multiplicaMatrizEscalar(multiplicaMatrizes(componente_lambda, matriz_opiniao_transposta), parametros.tau), omega_invertido), retornos_opiniao), -1.0 / parametros.aversaoRisco)
         var lambda = somaMatrizes(somaMatrizes(lambda_termo1, lambda_termo2), lambda_termo3)
