@@ -136,9 +136,9 @@ var componenteCalculadora = function() {
                 html += `<td class='text-right'>${(opiniao[j][i] * 100).toFixed(1)}</td>`
             }
 
-            html += `<td class='text-right'>${(retornos_posterior[i][0] * 100).toFixed(1)}</td>`
-            html += `<td class='text-right'>${(alocacao_posterior_risco[i][0] * 100).toFixed(1)}%</td>`
-            html += `<td class='text-right'>${(diferenca_alocacao[i][0] * 100).toFixed(1)}</td>`
+            html += `<td class='text-right'>${(retornos_posterior[i][0] * 100).toFixed(2)}</td>`
+            html += `<td class='text-right'>${(alocacao_posterior_risco[i][0] * 100).toFixed(2)}%</td>`
+            html += `<td class='text-right'>${(diferenca_alocacao[i][0] * 100).toFixed(2)}</td>`
             html += `</tr>`
         }
 
